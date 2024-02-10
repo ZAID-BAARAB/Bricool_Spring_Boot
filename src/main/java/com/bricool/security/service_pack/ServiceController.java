@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/services")
@@ -22,5 +23,14 @@ public class ServiceController {
 
         // Return a response indicating success
         return new ResponseEntity<>("Service created successfully", HttpStatus.CREATED);
+    }
+//  returning all services
+    @GetMapping
+    public ResponseEntity<List<Service>> getAllServices() throws IOException {
+        // Call the getAllServices method in ServiceService to retrieve all services
+        List<Service> services = serviceService.getAllServices();
+
+        // Return the list of services with a success status
+        return new ResponseEntity<>(services, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.bricool.security.config;
 
+import com.bricool.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,15 +35,32 @@ public class JwtService {
     return claimsResolver.apply(claims);
   }
 
+//  public String generateToken(UserDetails userDetails) {
+//    return generateToken(new HashMap<>(), userDetails);
+//  }
+
+//  public String generateToken(
+//      Map<String, Object> extraClaims,
+//      UserDetails userDetails
+//  ) {
+//    return buildToken(extraClaims, userDetails, jwtExpiration);
+//  }
+
   public String generateToken(UserDetails userDetails) {
-    return generateToken(new HashMap<>(), userDetails);
+    Map<String, Object> extraClaims = getUserClaims(userDetails);
+    return buildToken(extraClaims, userDetails, jwtExpiration);
   }
 
-  public String generateToken(
-      Map<String, Object> extraClaims,
-      UserDetails userDetails
-  ) {
-    return buildToken(extraClaims, userDetails, jwtExpiration);
+  private Map<String, Object> getUserClaims(UserDetails userDetails) {
+    Map<String, Object> userClaims = new HashMap<>();
+    if (userDetails instanceof User) {
+      User user = (User) userDetails;
+      userClaims.put("userId", user.getId());
+      userClaims.put("firstName", user.getFirstname());
+      userClaims.put("lastName", user.getLastname());
+      userClaims.put("email", user.getEmail());
+    }
+    return userClaims;
   }
 
   public String generateRefreshToken(
@@ -56,6 +74,7 @@ public class JwtService {
           UserDetails userDetails,
           long expiration
   ) {
+
     return Jwts
             .builder()
             .setClaims(extraClaims)

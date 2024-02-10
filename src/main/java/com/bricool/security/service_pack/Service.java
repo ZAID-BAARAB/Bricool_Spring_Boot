@@ -7,10 +7,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Data
 @Builder
@@ -28,9 +26,18 @@ public class Service {
     private String description;
     private LocalDate date;
     private BigDecimal price;
+    private String imagePath;
 
     @ManyToOne
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
+
+    @Getter
+    @Transient // Ignore this field for database persistence
+    private String imageBase64;
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
 }
 

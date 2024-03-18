@@ -1,15 +1,11 @@
 package com.bricool.security.service_pack;
 
 
-
-import com.bricool.security.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import lombok.*;
 
 @Data
 @Builder
@@ -17,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "service")
-public class Service {
+public class MyService {
 
     @Id
     @GeneratedValue
@@ -27,14 +23,18 @@ public class Service {
     private String description;
     private LocalDate date;
     private BigDecimal price;
-
+    private String category;
+    private String location;
+    @Column(name = "service_provider_id")
+    private Integer serviceProvider;
     @Getter
     private String imagePath;
 
-    @ManyToOne
-    @JoinColumn(name = "service_provider_id")
-    @JsonIgnore
-    private User serviceProvider;
+//    @ManyToOne
+//    @JoinColumn(name = "service_provider_id")
+//    @JsonIgnore
+//    public User serviceProvider;
+
 
     @Getter
     @Transient // Ignore this field for database persistence

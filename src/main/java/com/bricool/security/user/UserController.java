@@ -2,10 +2,7 @@ package com.bricool.security.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -23,5 +20,12 @@ public class UserController {
     ) {
         service.changePassword(request, connectedUser);
         return ResponseEntity.ok().build();
+    }
+
+//get user by ID
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDetailsResponse> getUserDetailsById(@PathVariable Integer userId) {
+        UserDetailsResponse userDetails = service.getUserDetailsById(userId);
+        return ResponseEntity.ok(userDetails);
     }
 }

@@ -18,11 +18,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "https://aliboucoding.com/course"
                 ),
                 description = "OpenApi documentation for Spring Security",
-                title = "OpenApi specification - Alibou",
+                title = "OpenApi specification - Bricool",
                 version = "1.0",
                 license = @License(
                         name = "Licence name",
-                        url = "https://some-url.com"
+                        url = "https://www,bricool.com"
                 ),
                 termsOfService = "Terms of service"
         ),

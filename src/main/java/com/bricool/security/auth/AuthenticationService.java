@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -27,23 +30,51 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
-  public AuthenticationResponse register(RegisterRequest request) {
-    var user = User.builder()
-        .firstname(request.getFirstname())
-        .lastname(request.getLastname())
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
-        .build();
-    var savedUser = repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
-    return AuthenticationResponse.builder()
-        .accessToken(jwtToken)
-            .refreshToken(refreshToken)
-        .build();
+//  public AuthenticationResponse register(RegisterRequest request) {
+//    var user = User.builder()
+//        .firstname(request.getFirstname())
+//        .lastname(request.getLastname())
+//        .email(request.getEmail())
+//        .password(passwordEncoder.encode(request.getPassword()))
+//        .role(request.getRole())
+//        .build();
+//    var savedUser = repository.save(user);
+//    var jwtToken = jwtService.generateToken(user);
+//    var refreshToken = jwtService.generateRefreshToken(user);
+//    saveUserToken(savedUser, jwtToken);
+//    return AuthenticationResponse.builder()
+//        .accessToken(jwtToken)
+//            .refreshToken(refreshToken)
+//        .build();
+//  }
+public AuthenticationResponse register(RegisterRequest request) {
+
+  var user = User.builder()
+          .firstname(request.getFirstname())
+          .lastname(request.getLastname())
+          .email(request.getEmail())
+          .password(passwordEncoder.encode(request.getPassword()))
+          .role(request.getRole())
+          .country(request.getCountry())  // Set country
+          .city(request.getCity())  // Set city
+          .address(request.getAddress())  // Set address
+          .about(request.getAbout())
+          .job(request.getJob())
+          .build();
+  String imagePath = saveUserImage(user, request);
+  // Set the imagePath to the user's filePath attribute
+  if (imagePath != null) {
+    user.setImagePath(imagePath);
   }
+  var savedUser = repository.save(user);
+  var jwtToken = jwtService.generateToken(user);
+  var refreshToken = jwtService.generateRefreshToken(user);
+  saveUserToken(savedUser, jwtToken);
+  return AuthenticationResponse.builder()
+          .accessToken(jwtToken)
+          .refreshToken(refreshToken)
+          .build();
+}
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
     authenticationManager.authenticate(
@@ -74,6 +105,7 @@ public class AuthenticationService {
         .build();
     tokenRepository.save(token);
   }
+
 
   private void revokeAllUserTokens(User user) {
     var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
@@ -113,4 +145,41 @@ public class AuthenticationService {
       }
     }
   }
+
+// set image
+private String saveUserImage(User user, RegisterRequest request) {
+  // Check if an image is provided
+  String base64Image = request.getImageBase64();
+  if (base64Image != null && !base64Image.isEmpty()) {
+    // Decode base64 image data
+    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+    String uploadDir = "C:\\Users\\HP\\Desktop\\bricoole\\Spring_boot_bricoole\\spring-boot-3-jwt-security\\src\\main\\resources\\serviceImages\\profileImages";
+    // Create a unique file name (you can customize this logic)
+    String fileName = System.currentTimeMillis() + "_user_photo.jpg";
+
+    // Create the file path
+    Path filePath = Paths.get(uploadDir, fileName);
+
+    // Write the image bytes to the file
+    try {
+      java.nio.file.Files.write(filePath, imageBytes);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    // Set the imagePath in the entity
+    System.out.println("imagePath in save method is :"+fileName);
+
+    // Set other fields like location
+
+
+    // Return the imagePath
+    return fileName;
+  }
+
+  // Return null if no image was provided
+  return null;
+}
+
+
 }

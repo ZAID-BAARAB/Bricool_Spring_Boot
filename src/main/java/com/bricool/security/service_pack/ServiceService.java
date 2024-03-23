@@ -209,7 +209,22 @@ public class ServiceService {
             e.printStackTrace();
         }
     }
+// method to return imsgebase64
+    private String generateBase64Image(String imageName) throws IOException {
+        // Specify the path where images are stored
+        String imagePath = "C:\\Users\\HP\\Desktop\\bricoole\\Spring_boot_bricoole\\spring-boot-3-jwt-security\\src\\main\\resources\\serviceImages";
 
+        // Construct the path to the image file
+        Path imagePathToFile = Paths.get(imagePath, imageName);
+
+        // Read the image bytes from the file
+        byte[] imageBytes = Files.readAllBytes(imagePathToFile);
+
+        // Encode the image bytes to Base64
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+        return base64Image;
+    }
 
 
 

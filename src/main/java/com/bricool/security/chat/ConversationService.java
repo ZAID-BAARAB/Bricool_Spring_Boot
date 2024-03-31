@@ -1,7 +1,9 @@
 package com.bricool.security.chat;
 
 import com.bricool.security.service_pack.MyService;
+import com.bricool.security.service_pack.ServiceRepository;
 import com.bricool.security.user.User;
+import com.bricool.security.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,39 +18,79 @@ import java.util.Optional;
 @Service
 public class ConversationService {
     private final ConversationRepository conversationRepository;
-
+    private final UserRepository userRepository;
+    private final ServiceRepository myServiceRepository;
+    
     @Autowired
-    public ConversationService(ConversationRepository conversationRepository) {
+    public ConversationService(ConversationRepository conversationRepository,
+                               UserRepository userRepository,
+                               ServiceRepository myServiceRepository) {
         this.conversationRepository = conversationRepository;
+        this.userRepository = userRepository;
+        this.myServiceRepository = myServiceRepository;
     }
-    public Conversation getOrCreateConversation(Integer clientId, Long serviceProviderId, Integer serviceId) {
-        Optional<Conversation> existingConversation = conversationRepository.findByClient_IdAndServiceProvider_Id(Math.toIntExact(clientId), serviceProviderId);
+//    public Conversation getOrCreateConversation(Integer clientId, Long serviceProviderId, Integer serviceId) {
+//        Optional<Conversation> existingConversation = conversationRepository.findByClient_IdAndServiceProvider_Id(Math.toIntExact(clientId), serviceProviderId);
+//
+//        return existingConversation.orElseGet(() -> createConversation(clientId, serviceProviderId, serviceId));
+//    }
 
+    public Conversation getOrCreateConversation(Integer clientId, Integer  serviceProviderId, Integer serviceId) {
+        if (clientId == null || serviceProviderId == null || serviceId == null) {
+            throw new IllegalArgumentException("Invalid arguments in getOrCreateConversation: clientId, serviceProviderId, or serviceId is null");
+        }
+        // Check if there's an existing conversation involving both the client and service provider with the given serviceId
+
+        Optional<Conversation> existingConversation = conversationRepository.findByClient_IdAndServiceProvider_IdAndService_Id(
+                clientId, serviceProviderId, serviceId);
+        if(existingConversation.isPresent()){
+            System.out.println("conversation already exist");
+        }
         return existingConversation.orElseGet(() -> createConversation(clientId, serviceProviderId, serviceId));
     }
 
-    private Conversation createConversation(Integer clientId, Long serviceProviderId, Integer serviceId) {
-        User client = new User();
-        client.setId(clientId);
 
-        User serviceProvider = new User();
-        serviceProvider.setId(Math.toIntExact(serviceProviderId));
+//    private Conversation createConversation(Integer clientId, Long serviceProviderId, Integer serviceId) {
+//
+//        User client = new User();
+//        client.setId(clientId);
+//
+//        User serviceProvider = new User();
+//        serviceProvider.setId(Math.toIntExact(serviceProviderId));
+//
+//        MyService service = new MyService(); // Assuming you have a Service class
+//        service.setId(serviceId);
+//
+//        Conversation newConversation = Conversation.builder()
+//                .client(client)
+//                .serviceProvider(serviceProvider)
+//                .service(service) // Associate the conversation with the service
+//                .build();
+//
+//        return conversationRepository.save(newConversation);
+//    }
 
-        MyService service = new MyService(); // Assuming you have a Service class
-        service.setId(serviceId);
+    private Conversation createConversation(Integer clientId, Integer serviceProviderId, Integer serviceId) {
+        if (clientId == null || serviceProviderId == null || serviceId == null) {
+            throw new IllegalArgumentException("Invalid arguments in createConversation: clientId, serviceProviderId, or serviceId is null");
+        }
+        // Fetch the client and service provider from the database
+        User client = userRepository.findById(clientId).orElseThrow(() -> new IllegalArgumentException("Client not found"));
+        User serviceProvider = userRepository.findById(serviceProviderId).orElseThrow(() -> new IllegalArgumentException("Service provider not found"));
 
+        // Fetch the service from the database
+        MyService service = myServiceRepository.findById(serviceId).orElseThrow(() -> new IllegalArgumentException("Service not found"));
+
+        // Create the conversation object
         Conversation newConversation = Conversation.builder()
                 .client(client)
                 .serviceProvider(serviceProvider)
-                .service(service) // Associate the conversation with the service
+                .service(service)
                 .build();
 
         return conversationRepository.save(newConversation);
     }
 
-//    public List<Conversation> getUserConversations(User user) {
-//        return conversationRepository.findByClientOrServiceProvider(user, user);
-//    }
 
     public List<Conversation> getUserConversations(User user) {
         List<Conversation> conversations = conversationRepository.findByClientOrServiceProvider(user, user);

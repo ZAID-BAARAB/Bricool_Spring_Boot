@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByConversation_IdOrderByTimestamp(Integer conversationId);
-
-    // You can add custom query methods here if needed
+    List<Message> findUnreadMessagesByConversation_IdAndUser_Id(Integer conversationId, Integer userId);
 }

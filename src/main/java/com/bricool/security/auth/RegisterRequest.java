@@ -14,7 +14,7 @@ public class RegisterRequest {
   private String lastname;
   private String email;
   private String password;
-  private Role role;
+  private Role role = Role.USER;
 
   // Additional fields
   private String imagePath;
@@ -27,4 +27,9 @@ public class RegisterRequest {
   @Transient // Ignore this field for database persistence
   private String imageBase64;
   // Getters and setters for the new fields
+
+  public void setRole(Role role) {
+    // Ensure that the role is always set to USER
+    this.role = Role.USER;
+  }
 }

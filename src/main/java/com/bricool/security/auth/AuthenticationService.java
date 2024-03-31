@@ -54,7 +54,6 @@ public AuthenticationResponse register(RegisterRequest request) {
           .lastname(request.getLastname())
           .email(request.getEmail())
           .password(passwordEncoder.encode(request.getPassword()))
-          .role(request.getRole())
           .country(request.getCountry())  // Set country
           .city(request.getCity())  // Set city
           .address(request.getAddress())  // Set address

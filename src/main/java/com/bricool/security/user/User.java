@@ -57,10 +57,7 @@ public class User implements CustomUserDetails {
   @OneToMany(mappedBy = "serviceProvider")
   @JsonIgnore
   private List<Conversation> serviceProviderConversations;
-// i commented this to break syrcular recursion
-//  @OneToMany(mappedBy = "user")
-//  private List<Message> messages;
-// <==== end of chatting functionality =====>
+
 
   public  void setImageBase64(String imageBase64) {
     this.imageBase64 = imageBase64;

@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class MessageRequest {
-    private Long serviceProviderId;
+    private Integer serviceProviderId;
     private String content;
     private Integer serviceId;
+    private Integer clientId;
 
 }

@@ -21,8 +21,6 @@ public class Message {
     @GeneratedValue
     private Long id;
 
-
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "conversation_id")
@@ -34,9 +32,14 @@ public class Message {
 
     private String content;
 
+    private Integer client_id;
+
     private LocalDateTime timestamp;
 
     @Builder.Default
     private boolean isRead = false;
 
+    public void setIsRead(boolean b) {
+        isRead=b;
+    }
 }

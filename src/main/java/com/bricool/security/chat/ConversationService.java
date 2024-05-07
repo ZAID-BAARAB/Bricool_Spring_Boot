@@ -50,25 +50,7 @@ public class ConversationService {
     }
 
 
-//    private Conversation createConversation(Integer clientId, Long serviceProviderId, Integer serviceId) {
-//
-//        User client = new User();
-//        client.setId(clientId);
-//
-//        User serviceProvider = new User();
-//        serviceProvider.setId(Math.toIntExact(serviceProviderId));
-//
-//        MyService service = new MyService(); // Assuming you have a Service class
-//        service.setId(serviceId);
-//
-//        Conversation newConversation = Conversation.builder()
-//                .client(client)
-//                .serviceProvider(serviceProvider)
-//                .service(service) // Associate the conversation with the service
-//                .build();
-//
-//        return conversationRepository.save(newConversation);
-//    }
+
 
     private Conversation createConversation(Integer clientId, Integer serviceProviderId, Integer serviceId) {
         if (clientId == null || serviceProviderId == null || serviceId == null) {
@@ -128,5 +110,8 @@ public class ConversationService {
         // Encode the image bytes to Base64
         return Base64.getEncoder().encodeToString(imageBytes);
     }
-    // Add additional methods as needed for retrieving or manipulating conversations
+//get conversation by its id and service provider id
+    public Optional<Conversation> getConversationByIdAndServiceProvider_Id(Integer conversationId, Integer serviceProviderId) {
+        return conversationRepository.findByIdAndServiceProvider_Id(conversationId, serviceProviderId);
+    }
 }

@@ -4,6 +4,8 @@ package com.bricool.security.chat;
 import com.bricool.security.user.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -105,5 +108,13 @@ public class MessageController {
         Integer userId = currentUser.getId();
 
         messageService.markMessagesAsRead(conversationId, userId);
+    }
+// get conversation by its id and service provider id
+    @GetMapping("/{conversationId}/{serviceProviderId}")
+    public ResponseEntity<Conversation> getConversationByIdAndServiceProviderId(
+            @PathVariable Integer conversationId, @PathVariable Integer serviceProviderId) {
+                Optional<Conversation> conversationOptional = conversationService.getConversationByIdAndServiceProvider_Id(conversationId, serviceProviderId);
+                return conversationOptional.map(conversation -> ResponseEntity.ok().body(conversation))
+                        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

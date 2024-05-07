@@ -10,6 +10,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     Optional<Conversation> findByClient_IdAndServiceProvider_Id(Integer clientId, Integer serviceProviderId);
     List<Conversation> findByClientOrServiceProvider(User client, User serviceProvider);
     Optional<Conversation> findByClient_IdAndServiceProvider_IdAndService_Id(Integer clientId, Integer serviceProviderId, Integer serviceId);
+    Optional<Conversation> findByIdAndServiceProvider_Id(Integer id, Integer serviceProviderId);
 
 
 }

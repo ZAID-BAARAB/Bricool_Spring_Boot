@@ -37,4 +37,4 @@ To build and run the project, follow these steps:
 -> The application will be available at http://localhost:8080.
 # Bricool_Spring_Boot
 this is  repository for my spring boot project for online services 
->>>>>>> 85045d1ba9e62176ab289187de8a9ee5cf3ddb36
+

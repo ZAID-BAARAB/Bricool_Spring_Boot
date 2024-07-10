@@ -55,6 +55,36 @@ public class ServiceController {
         // Return the list of services with a success status
         return new ResponseEntity<>(services, HttpStatus.OK);
     }
+
+// get 4 by category
+//@GetMapping("/SuggestionbyCategory")
+//public ResponseEntity<List<MyService>> getSuggestionServicesByCategory(@RequestParam String category) throws IOException {
+//    // Call the getServicesByCategory method in ServiceService to retrieve services by category
+//    List<MyService> services = serviceService.getLimitedServicesByCategory(category, 4);
+//
+//    if (services.isEmpty()) {
+//        // If no services are found for the given category, return a not found status
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+//
+//    // Return the list of services with a success status
+//    return new ResponseEntity<>(services, HttpStatus.OK);
+//}
+
+    @GetMapping("/SuggestionbyCategory/{category}")
+    public ResponseEntity<List<MyService>> getSuggestionServicesByCategory(@PathVariable String category) throws IOException {
+        // Call the getServicesByCategory method in ServiceService to retrieve services by category
+        List<MyService> services = serviceService.getLimitedServicesByCategory(category, 4);
+
+        if (services.isEmpty()) {
+            // If no services are found for the given category, return a not found status
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Return the list of services with a success status
+        return new ResponseEntity<>(services, HttpStatus.OK);
+    }
+
 // get service by id
 
     @GetMapping("/{id}")
@@ -133,4 +163,17 @@ public class ServiceController {
 //            return ResponseEntity.notFound().build();
 //        }
 //    }
+
+//return Random services
+    @GetMapping("/randomservices")
+    public List<MyService> getRandomServices() {
+        return serviceService.getRandomServices(6);
+    }
+// get service by service provider id
+    @GetMapping("/provider/{serviceProviderId}")
+    public ResponseEntity<List<MyService>> getServicesByServiceProvider(@PathVariable Integer serviceProviderId) {
+        List<MyService> services = serviceService.getServicesByServiceProvider(serviceProviderId);
+        return ResponseEntity.ok(services);
+    }
+
 }

@@ -49,4 +49,15 @@ public class UserService {
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
     }
+
+//find by ID
+    public User getUserById(Integer userId) {
+        return repository.findById(userId).orElse(null);
+    }
+
+//save User
+    public User saveUser(User user) {
+        // Save the user entity in the database
+        return repository.save(user);
+    }
 }

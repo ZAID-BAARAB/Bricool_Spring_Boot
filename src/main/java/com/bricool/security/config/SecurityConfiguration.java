@@ -62,7 +62,11 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                                 .requestMatchers(HttpMethod.GET, "/api/v1/services/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/services/byCategory").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/services/randomservices").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/services//SuggestionbyCategory/{category}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/services/provider/{serviceProviderId}").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/users/{userId}").permitAll()
                                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -80,7 +84,6 @@ public class SecurityConfiguration {
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 )
         ;
-
         return http.build();
     }
 }

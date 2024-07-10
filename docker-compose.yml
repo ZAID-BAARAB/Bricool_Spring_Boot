@@ -1,38 +1,94 @@
+version: '3.8'
+
 services:
-  postgres:
-    container_name: postgres-sql
-    image: postgres
+  mysql:
+    container_name: mysql-db
+    image: mysql:latest
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      MYSQL_ROOT_PASSWORD: Novel222@@@
+      MYSQL_DATABASE: bricool
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Novel222@@@
     volumes:
-      - postgres:/data/postgres
+      - mysql-data:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
-      - postgres
+      - mysql-network
     restart: unless-stopped
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: Novel222@@@
     ports:
-      - "5050:80"
+      - "8080:80"
     networks:
-      - postgres
+      - mysql-network
+    restart: unless-stopped
+
+  spring-boot-app:
+    container_name: spring-boot-app
+    image: your-dockerhub-username/your-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bricool
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Novel222@@@
+    networks:
+      - mysql-network
     restart: unless-stopped
 
 networks:
-  postgres:
+  mysql-network:
     driver: bridge
 
 volumes:
-  postgres:
-  pgadmin:
+  mysql-data:
+
+
+
+#services:
+#  postgres:
+#    container_name: postgres-sql
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: username
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgres
+#    volumes:
+#      - postgres:/data/postgres
+#    ports:
+#      - "5432:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#  pgadmin:
+#    container_name: pgadmin
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#
+#networks:
+#  postgres:
+#    driver: bridge
+#
+#volumes:
+#  postgres:
+#  pgadmin:

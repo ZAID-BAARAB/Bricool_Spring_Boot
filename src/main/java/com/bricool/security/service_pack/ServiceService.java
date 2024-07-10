@@ -1,11 +1,11 @@
 package com.bricool.security.service_pack;
 
+import com.bricool.security.user.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.bricool.security.user.CustomUserDetails;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -107,8 +107,34 @@ public class ServiceService {
                 })
                 .collect(Collectors.toList());
     }
+// get suggestion services based on category
+    public List<MyService> getLimitedServicesByCategory(String category, int limit) {
+        // Retrieve limited services by category from the repository
+        List<MyService> services = serviceRepository.findLimitedServicesByCategory(category, limit);
 
-    //find by id method
+        // Specify the path where images are stored
+        String imagePath = "C:\\Users\\HP\\Desktop\\bricoole\\Spring_boot_bricoole\\spring-boot-3-jwt-security\\src\\main\\resources\\serviceImages";
+
+        // For each service, load the image, encode it to Base64, and set it in imageBase64 field
+        return services.stream()
+                .peek(service -> {
+                    try {
+                        String imageName = service.getImagePath();
+                        if (imageName != null) {
+                            Path imagePathToFile = Paths.get(imagePath, imageName);
+                            byte[] imageBytes = Files.readAllBytes(imagePathToFile);
+                            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                            service.setImageBase64(base64Image);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle the exception according to your needs
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+
+//find by id method
 
     public List<MyService> getServiceById(Integer id) {
         // Implementation to retrieve services by category from the repository
@@ -225,6 +251,56 @@ public class ServiceService {
 
         return base64Image;
     }
+
+//method to return 9 Random services for Home Page
+    public List<MyService> getRandomServices(int limit) {
+        List<MyService> services = serviceRepository.findRandomServices(limit);
+
+        // Specify the path where images are stored
+        String imagePath = "C:\\Users\\HP\\Desktop\\bricoole\\Spring_boot_bricoole\\spring-boot-3-jwt-security\\src\\main\\resources\\serviceImages";
+
+        // For each service, load the image, encode it to Base64, and set it in imageBase64 field
+        return services.stream()
+                .peek(service -> {
+                    try {
+                        String imageName = service.getImagePath();
+                        if (imageName != null) {
+                            Path imagePathToFile = Paths.get(imagePath, imageName);
+                            byte[] imageBytes = Files.readAllBytes(imagePathToFile);
+                            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                            service.setImageBase64(base64Image);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle the exception according to your needs
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+// return service by serviceProvider
+    public List<MyService> getServicesByServiceProvider(Integer serviceProvider) {
+    List<MyService> services = serviceRepository.findByServiceProvider(serviceProvider);
+
+    // Specify the path where images are stored
+    String imagePath = "C:\\Users\\HP\\Desktop\\bricoole\\Spring_boot_bricoole\\spring-boot-3-jwt-security\\src\\main\\resources\\serviceImages";
+
+    // For each service, load the image, encode it to Base64, and set it in imageBase64 field
+    return services.stream()
+            .peek(service -> {
+                try {
+                    String imageName = service.getImagePath();
+                    if (imageName != null) {
+                        Path imagePathToFile = Paths.get(imagePath, imageName);
+                        byte[] imageBytes = Files.readAllBytes(imagePathToFile);
+                        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                        service.setImageBase64(base64Image);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace(); // Handle the exception according to your needs
+                }
+            })
+            .collect(Collectors.toList());
+}
 
 
 

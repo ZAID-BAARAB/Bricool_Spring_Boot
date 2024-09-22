@@ -53,7 +53,7 @@ volumes:
   mysql-data:
 
 
-
+#  this is an option of postgres docker configuration
 #services:
 #  postgres:
 #    container_name: postgres-sql

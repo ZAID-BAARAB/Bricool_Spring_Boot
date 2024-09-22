@@ -1,20 +1,25 @@
-<<<<<<< HEAD
 
-=======
-# Bricool_Spring_Boot Security with JWT Implementation
-This project demonstrates the implementation of security using Spring Boot 3.0 and JSON Web Tokens (JWT). It includes the following features:
+# Bricool_Spring_Boot 
+This is my accademic "PFA" project demonstrates the implementation of security using Spring Boot 3.0 and JSON Web Tokens (JWT), Spring Data JPA, REST APIs,  . It includes the following features:
 
-## Features
+## Security Features
 * User registration and login with JWT authentication
 * Password encryption using BCrypt
 * Role-based authorization with Spring Security
 * Customized access denied handling
 * Logout mechanism
 * Refresh token
+##Profile and  Services Management APIs 
+* create account and costumize your profile
+* Post your own services that you can offer to clients
+* include photos of services
+* chat functionality to contact the tasker
+* File-based storage with database reference to store images
 
 ## Technologies
 * Spring Boot 3.0
 * Spring Security
+* Spring Data JPA
 * JSON Web Tokens (JWT)
 * BCrypt
 * Maven
@@ -30,14 +35,11 @@ To build and run the project, follow these steps:
 
 
 * Navigate to the project directory: cd spring-boot-security-jwt
-* Add database "jwt_security" to postgres
+* Add database "Bricool" to postgres
 * Build the project: mvn clean install
 * Run the project: mvn spring-boot:run
 
 -> The application will be available at http://localhost:8080.
 # Bricool_Spring_Boot
-<<<<<<< HEAD
-=======
-this is  repository for my spring boot project for online services 
->>>>>>> b0b9df25c125bd814b25031d1413d08339b01de4
+
 
